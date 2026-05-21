@@ -1,0 +1,24 @@
+{
+  "pollIntervalMs": 1000,
+  "logFile": "logs/file-changes.jsonl",
+  "paths": [
+    {
+      "name": "input",
+      "path": "watched/input",
+      "recursive": true,
+      "ignore": [
+        "*.tmp",
+        ".git"
+      ]
+    },
+    {
+      "name": "output",
+      "path": "watched/output",
+      "recursive": true,
+      "ignore": [
+        "*.tmp",
+        ".git"
+      ]
+    }
+  ]
+}
