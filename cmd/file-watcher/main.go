@@ -45,13 +45,35 @@ func main() {
 		}
 	}()
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	signals := make(chan os.Signal, 2)
+	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
+	defer signal.Stop(signals)
+
+	go func() {
+		firstSignal := <-signals
+		logger.Info("shutdown requested", "signal", firstSignal.String())
+		cancel()
+
+		secondSignal := <-signals
+		logger.Error("forcing shutdown after second signal", "signal", secondSignal.String())
+		os.Exit(1)
+	}()
 
 	runner := app.NewRunner(cfg, logger, eventLogger)
 	startedAt := time.Now()
+	totalFeatures := len(cfg.WatcherOnFileCreation) + len(cfg.WatcherOnFile)
 
-	logger.Info("starting file watcher", "watchers", len(cfg.Paths), "config", *configPath)
+	logger.Info(
+		"starting file watcher",
+		"features", totalFeatures,
+		"watcher_on_file_creation", len(cfg.WatcherOnFileCreation),
+		"watcher_on_file", len(cfg.WatcherOnFile),
+		"shutdown_timeout_ms", cfg.ShutdownTimeoutMs,
+		"config", *configPath,
+	)
 	if err := runner.Run(ctx); err != nil {
 		logger.Error("file watcher stopped with an error", "error", err)
 		os.Exit(1)

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MachineEvent>
+    <Element>
+        <Date>2026/05/21,15:46:52</Date>
+        <MDLN>71100</MDLN>
+        <EventSerial>78345</EventSerial>
+        <EventCode>50</EventCode>
+        <EventDetailCode>000000</EventDetailCode>
+        <Stage>00</Stage>
+        <Lane>02</Lane>
+        <RedLightStatus>00</RedLightStatus>
+        <YellowLightStatus>02</YellowLightStatus>
+        <GreenLightStatus>01</GreenLightStatus>
+        <ReserveLightStatus>00</ReserveLightStatus>
+        <BuzzerStatus>00</BuzzerStatus>
+        <MCNo>4</MCNo>
+    </Element>
+</MachineEvent>

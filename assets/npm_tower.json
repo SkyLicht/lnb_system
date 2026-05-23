@@ -1,0 +1,270 @@
+{
+  "machine_1": {
+    "tower": {
+      "red": 0,
+      "green": 1,
+      "yellow": 2,
+      "buzzer": 0,
+      "timestamp": "2026-05-23T19:44:58Z"
+    },
+    "stage": {
+      "00_00": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "00_01": {
+        "red": 0,
+        "green": 0,
+        "yellow": 2,
+        "buzzer": 2,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "01_00": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "01_01": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "02_00": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "02_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "02_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:44:58Z"
+      }
+    }
+  },
+  "machine_2": {
+    "tower": {
+      "red": 0,
+      "green": 1,
+      "yellow": 2,
+      "buzzer": 0,
+      "timestamp": "2026-05-23T20:14:00Z"
+    },
+    "stage": {
+      "00_00": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "00_01": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "01_00": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T20:14:00Z"
+      },
+      "01_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "01_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "02_00": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "02_01": {
+        "red": 0,
+        "green": 0,
+        "yellow": 2,
+        "buzzer": 1,
+        "timestamp": "2026-05-23T19:30:00Z"
+      }
+    }
+  },
+  "machine_3": {
+    "tower": {
+      "red": 0,
+      "green": 1,
+      "yellow": 2,
+      "buzzer": 0,
+      "timestamp": "2026-05-23T20:14:00Z"
+    },
+    "stage": {
+      "00_00": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "00_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T20:14:00Z"
+      },
+      "00_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "01_00": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:26:28Z"
+      },
+      "01_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "01_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:26:28Z"
+      },
+      "02_00": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "02_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "02_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      }
+    }
+  },
+  "machine_4": {
+    "tower": {
+      "red": 0,
+      "green": 1,
+      "yellow": 0,
+      "buzzer": 0,
+      "timestamp": "2026-05-23T20:14:00Z"
+    },
+    "stage": {
+      "00_00": {
+        "red": 0,
+        "green": 0,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": ""
+      },
+      "00_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "00_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "01_00": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "01_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "01_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T20:14:00Z"
+      },
+      "02_00": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "02_01": {
+        "red": 0,
+        "green": 1,
+        "yellow": 0,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:30:00Z"
+      },
+      "02_02": {
+        "red": 0,
+        "green": 1,
+        "yellow": 2,
+        "buzzer": 0,
+        "timestamp": "2026-05-23T19:26:28Z"
+      }
+    }
+  }
+}

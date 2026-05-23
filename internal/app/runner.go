@@ -2,13 +2,14 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"sync"
 	"time"
 
 	"lnb/internal/config"
 	"lnb/internal/events"
-	"lnb/internal/watcher"
+	"lnb/internal/features"
 )
 
 type Runner struct {
@@ -26,23 +27,34 @@ func NewRunner(cfg config.Config, logger *slog.Logger, eventLogger events.Logger
 }
 
 func (r Runner) Run(ctx context.Context) error {
-	interval := time.Duration(r.config.PollIntervalMs) * time.Millisecond
+	featureRunners := features.Build(r.config, r.logger, r.eventLogger)
 
 	var wg sync.WaitGroup
-	for _, pathConfig := range r.config.Paths {
-		pathConfig := pathConfig
+	for _, featureRunner := range featureRunners {
+		featureRunner := featureRunner
 		wg.Add(1)
 
 		go func() {
 			defer wg.Done()
-
-			engine := watcher.New(pathConfig, interval, r.eventLogger, r.logger)
-			engine.Run(ctx)
+			featureRunner.Run(ctx)
 		}()
 	}
 
 	<-ctx.Done()
 	r.logger.Info("shutdown signal received")
-	wg.Wait()
-	return nil
+
+	waitDone := make(chan struct{})
+	go func() {
+		wg.Wait()
+		close(waitDone)
+	}()
+
+	shutdownTimeout := time.Duration(r.config.ShutdownTimeoutMs) * time.Millisecond
+	select {
+	case <-waitDone:
+		r.logger.Info("graceful shutdown completed")
+		return nil
+	case <-time.After(shutdownTimeout):
+		return fmt.Errorf("graceful shutdown timed out after %s", shutdownTimeout)
+	}
 }

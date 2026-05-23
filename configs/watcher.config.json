@@ -1,19 +1,55 @@
 {
-  "pollIntervalMs": 1000,
   "logFile": "logs/file-changes.jsonl",
-  "paths": [
+  "os": "windows",
+  "shutdownTimeoutMs": 15000,
+  "watcher_on_file_creation": [
     {
-      "name": "input",
-      "path": "watched/input",
+      "id": "j01_top_tower_state",
+      "pollIntervalMs": 1000,
+      "name": "panasonic_top",
+      "function": "lnb_type1_logs",
+      "input": {
+        "samba": true,
+        "path": "\\\\10.13.104.240\\lws",
+        "credentials": false,
+        "user": "",
+        "pass": ""
+      },
+      "output": {
+        "samba": false,
+        "path": "C:\\data\\logs\\panasonic\\J01",
+        "credentials": false,
+        "user": "",
+        "pass": ""
+      },
       "recursive": true,
       "ignore": [
         "*.tmp",
         ".git"
       ]
-    },
+    }
+  ],
+  "watcher_on_file": [
     {
-      "name": "output",
-      "path": "watched/output",
+      "id": "",
+      "pollIntervalMs": 1000,
+      "name": "modified_log_ss",
+      "file": "log_ss",
+      "function": "log_to_console",
+      "input": {
+        "samba": false,
+        "path": "watched/input",
+        "credentials": false,
+        "user": "",
+        "pass": ""
+      },
+      "output": {
+        "samba": false,
+        "path": "",
+        "credentials": false,
+        "user": "",
+        "pass": ""
+      },
       "recursive": true,
       "ignore": [
         "*.tmp",

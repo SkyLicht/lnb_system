@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MachineEvent>
+    <Element>
+        <Date>2026/05/21,15:50:46</Date>
+        <MDLN>71100</MDLN>
+        <EventSerial>709855</EventSerial>
+        <EventCode>04</EventCode>
+        <EventDetailCode>000000</EventDetailCode>
+        <PcbSerial>820411</PcbSerial>
+        <Stage>01</Stage>
+        <Lane>02</Lane>
+        <CurrentPcbPosition>04</CurrentPcbPosition>
+        <ProductBoardCount>264</ProductBoardCount>
+        <CycleTime1>24.50</CycleTime1>
+        <CycleTime2>120.85</CycleTime2>
+        <Lot>PXF2C1-TA-A-A02</Lot>
+        <ProductMode>00</ProductMode>
+        <MCNo>2</MCNo>
+    </Element>
+</MachineEvent>

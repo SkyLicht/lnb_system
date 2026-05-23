@@ -5,19 +5,22 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"lnb/internal/config"
 )
 
-type Scanner struct {
-	root   string
-	config config.PathConfig
+type ScanOptions struct {
+	Recursive bool
+	Ignore    []string
 }
 
-func NewScanner(root string, pathConfig config.PathConfig) Scanner {
+type Scanner struct {
+	root    string
+	options ScanOptions
+}
+
+func NewScanner(root string, options ScanOptions) Scanner {
 	return Scanner{
-		root:   root,
-		config: pathConfig,
+		root:    root,
+		options: options,
 	}
 }
 
@@ -42,7 +45,7 @@ func (s Scanner) Scan() (map[string]FileState, error) {
 			return walkErr
 		}
 
-		if path != s.root && shouldIgnore(path, s.config.Ignore) {
+		if path != s.root && shouldIgnore(path, s.options.Ignore) {
 			if entry.IsDir() {
 				return filepath.SkipDir
 			}
@@ -50,7 +53,7 @@ func (s Scanner) Scan() (map[string]FileState, error) {
 		}
 
 		if entry.IsDir() {
-			if path != s.root && !s.config.Recursive {
+			if path != s.root && !s.options.Recursive {
 				return filepath.SkipDir
 			}
 			return nil

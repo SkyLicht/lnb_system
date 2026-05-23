@@ -11,6 +11,7 @@ deployments/           Deployment artifacts
 internal/app/          Application orchestration
 internal/config/       Configuration loading and validation
 internal/events/       Event models and event writers
+internal/functions/    Function handlers and registry
 internal/watcher/      File scanning, hashing, and change detection
 watched/               Local sample folders
 ```
@@ -27,18 +28,65 @@ The service writes operational logs to stdout and change events to both stdout a
 
 ```json
 {
-  "pollIntervalMs": 1000,
   "logFile": "logs/file-changes.jsonl",
-  "paths": [
+  "os": "windows",
+  "shutdownTimeoutMs": 15000,
+  "watcher_on_file_creation": [
     {
+      "pollIntervalMs": 1000,
+      "name": "creation_logs",
+      "function": "lnb_type1_logs",
+      "input": {
+        "samba": true,
+        "path": "\\\\10.13.104.240\\lws",
+        "credentials": true,
+        "user": "domain\\user",
+        "pass": "secret"
+      },
+      "output": {
+        "samba": false,
+        "path": "C:\\data\\logs\\panasonic\\J01",
+        "credentials": false,
+        "user": "",
+        "pass": ""
+      },
+      "recursive": true,
+      "ignore": ["*.tmp", ".git"]
+    }
+  ],
+  "watcher_on_file": [
+    {
+      "pollIntervalMs": 1000,
       "name": "input",
-      "path": "watched/input",
+      "file": "log_ss",
+      "function": "log_to_console",
+      "input": {
+        "samba": false,
+        "path": "watched/input",
+        "credentials": false,
+        "user": "",
+        "pass": ""
+      },
+      "output": {
+        "samba": false,
+        "path": "",
+        "credentials": false,
+        "user": "",
+        "pass": ""
+      },
       "recursive": true,
       "ignore": ["*.tmp", ".git"]
     }
   ]
 }
 ```
+
+- `watcher_on_file_creation`: triggers when a new file is created and logs the file content to stdout.
+- `watcher_on_file`: triggers when the configured `file` is modified and logs the updated content to stdout.
+- `input`: source location options, including Samba and optional credentials.
+- `output`: destination location options, including Samba and optional credentials.
+- `function`: selects how the trigger is handled. Implemented now: `log_to_console`, `lnb_type1_logs`.
+- `shutdownTimeoutMs`: max time to wait for graceful shutdown before returning an error.
 
 ## Event Format
 
