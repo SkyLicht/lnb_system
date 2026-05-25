@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Watcher Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">LNB watcher</p>
+          <h1>Runtime dashboard</h1>
+        </div>
+        <div class="status-pill" id="overallStatus">Starting</div>
+      </header>
+
+      <section class="metrics" aria-label="Watcher summary">
+        <div class="metric">
+          <span class="label">Watchers OK</span>
+          <strong id="watchersOk">0</strong>
+        </div>
+        <div class="metric">
+          <span class="label">Errors</span>
+          <strong id="errors">0</strong>
+        </div>
+        <div class="metric">
+          <span class="label">Last check</span>
+          <strong id="checkedAt">-</strong>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>Watchers</h2>
+          <span id="watcherCount">0 configured</span>
+        </div>
+        <div class="watchers" id="watchers"></div>
+      </section>
+
+      <section class="panel terminal-panel">
+        <div class="section-title">
+          <h2>Terminal logs</h2>
+          <span id="logCount">0 lines</span>
+        </div>
+        <div class="terminal" id="logs"></div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
