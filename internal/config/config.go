@@ -19,16 +19,19 @@ type Config struct {
 }
 
 type WatchTarget struct {
-	ID             string   `json:"id"`
-	PollIntervalMs int      `json:"pollIntervalMs"`
-	Name           string   `json:"name"`
-	Input          IOConfig `json:"input"`
-	Output         IOConfig `json:"output"`
-	Path           string   `json:"path"`
-	OutputPath     string   `json:"output_path"`
-	Function       string   `json:"function"`
-	Recursive      bool     `json:"recursive"`
-	Ignore         []string `json:"ignore"`
+	ID                      string       `json:"id"`
+	PollIntervalMs          int          `json:"pollIntervalMs"`
+	Name                    string       `json:"name"`
+	Input                   IOConfig     `json:"input"`
+	Output                  OutputConfig `json:"output"`
+	Path                    string       `json:"path"`
+	OutputPath              string       `json:"output_path"`
+	Function                string       `json:"function"`
+	Retry                   int          `json:"retry"`
+	Accepted                []string     `json:"accepted"`
+	IgnoreFailedConnections bool         `json:"ignoreFailedConnections"`
+	Recursive               bool         `json:"recursive"`
+	Ignore                  []string     `json:"ignore"`
 }
 
 type IOConfig struct {
@@ -37,6 +40,10 @@ type IOConfig struct {
 	Credentials bool   `json:"credentials"`
 	User        string `json:"user"`
 	Pass        string `json:"pass"`
+}
+
+type OutputConfig struct {
+	Path string `json:"path"`
 }
 
 type WatcherOnFileCreationConfig struct {
@@ -124,11 +131,13 @@ func applyWatchTargetDefaults(target *WatchTarget, osName string) {
 	target.Input.User = strings.TrimSpace(target.Input.User)
 	target.Input.Pass = strings.TrimSpace(target.Input.Pass)
 	target.Output.Path = normalizePathForOS(strings.TrimSpace(target.Output.Path), osName)
-	target.Output.User = strings.TrimSpace(target.Output.User)
-	target.Output.Pass = strings.TrimSpace(target.Output.Pass)
+	target.Accepted = normalizeExtensions(target.Accepted)
 
 	if target.PollIntervalMs <= 0 {
 		target.PollIntervalMs = 1000
+	}
+	if target.Retry == 0 {
+		target.Retry = 3
 	}
 
 	if target.Input.Path == "" && target.Path != "" {
@@ -160,6 +169,9 @@ func validateWatchTarget(group string, index int, target WatchTarget) error {
 	if target.Function == "" {
 		return fmt.Errorf("%s[%d].function is required", group, index)
 	}
+	if target.Retry < 0 {
+		return fmt.Errorf("%s[%d].retry must be zero or greater", group, index)
+	}
 	if target.Input.Credentials {
 		if target.Input.User == "" {
 			return fmt.Errorf("%s[%d].input.user is required when input.credentials is true", group, index)
@@ -168,15 +180,6 @@ func validateWatchTarget(group string, index int, target WatchTarget) error {
 			return fmt.Errorf("%s[%d].input.pass is required when input.credentials is true", group, index)
 		}
 	}
-	if target.Output.Credentials {
-		if target.Output.User == "" {
-			return fmt.Errorf("%s[%d].output.user is required when output.credentials is true", group, index)
-		}
-		if target.Output.Pass == "" {
-			return fmt.Errorf("%s[%d].output.pass is required when output.credentials is true", group, index)
-		}
-	}
-
 	return nil
 }
 
@@ -204,4 +207,24 @@ func normalizePathForOS(pathValue string, osName string) string {
 	}
 
 	return filepath.Clean(normalized)
+}
+
+func normalizeExtensions(values []string) []string {
+	normalized := make([]string, 0, len(values))
+	seen := map[string]bool{}
+	for _, value := range values {
+		extension := strings.ToLower(strings.TrimSpace(value))
+		if extension == "" {
+			continue
+		}
+		if !strings.HasPrefix(extension, ".") {
+			extension = "." + extension
+		}
+		if seen[extension] {
+			continue
+		}
+		seen[extension] = true
+		normalized = append(normalized, extension)
+	}
+	return normalized
 }

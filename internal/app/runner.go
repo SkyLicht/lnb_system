@@ -10,39 +10,60 @@ import (
 	"lnb/internal/config"
 	"lnb/internal/events"
 	"lnb/internal/features"
+	"lnb/internal/health"
 )
 
 type Runner struct {
 	config      config.Config
 	logger      *slog.Logger
 	eventLogger events.Logger
+	healthStore *health.Store
 }
 
-func NewRunner(cfg config.Config, logger *slog.Logger, eventLogger events.Logger) Runner {
+func NewRunner(cfg config.Config, logger *slog.Logger, eventLogger events.Logger, healthStore *health.Store) Runner {
 	return Runner{
 		config:      cfg,
 		logger:      logger,
 		eventLogger: eventLogger,
+		healthStore: healthStore,
 	}
 }
 
 func (r Runner) Run(ctx context.Context) error {
-	featureRunners := features.Build(r.config, r.logger, r.eventLogger)
+	featureRunners := features.Build(r.config, r.logger, r.eventLogger, r.healthStore)
+	runCtx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
 	var wg sync.WaitGroup
+	errs := make(chan error, len(featureRunners))
 	for _, featureRunner := range featureRunners {
 		featureRunner := featureRunner
 		wg.Add(1)
 
 		go func() {
 			defer wg.Done()
-			featureRunner.Run(ctx)
+			if err := featureRunner.Run(runCtx); err != nil {
+				errs <- err
+				cancel()
+			}
 		}()
 	}
 
-	<-ctx.Done()
-	r.logger.Info("shutdown signal received")
+	select {
+	case err := <-errs:
+		r.logger.Error("feature runner stopped with an error", "error", err)
+		if waitErr := r.waitForRunners(&wg); waitErr != nil {
+			return fmt.Errorf("%w; %v", err, waitErr)
+		}
+		return err
+	case <-ctx.Done():
+		r.logger.Info("shutdown signal received")
+	}
 
+	return r.waitForRunners(&wg)
+}
+
+func (r Runner) waitForRunners(wg *sync.WaitGroup) error {
 	waitDone := make(chan struct{})
 	go func() {
 		wg.Wait()

@@ -1,6 +1,8 @@
 package watcher
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -35,5 +37,31 @@ func TestDiffDetectsCreatedModifiedAndDeletedFiles(t *testing.T) {
 	}
 	if !seen[events.ChangeDeleted] {
 		t.Fatal("expected a deleted event")
+	}
+}
+
+func TestSnapshotFileReusesPreviousStateWhenMetadataUnchanged(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "sample.txt")
+	if err := os.WriteFile(path, []byte("same"), 0o600); err != nil {
+		t.Fatalf("write test file: %v", err)
+	}
+
+	previous, changed, err := SnapshotFile(path, nil)
+	if err != nil {
+		t.Fatalf("snapshot file: %v", err)
+	}
+	if !changed {
+		t.Fatal("expected initial snapshot to be marked changed")
+	}
+
+	current, changed, err := SnapshotFile(path, &previous)
+	if err != nil {
+		t.Fatalf("snapshot file with previous state: %v", err)
+	}
+	if changed {
+		t.Fatal("expected unchanged metadata to reuse previous state")
+	}
+	if current.Hash != previous.Hash {
+		t.Fatal("expected previous hash to be reused")
 	}
 }

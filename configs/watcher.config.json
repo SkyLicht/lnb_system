@@ -8,19 +8,18 @@
       "pollIntervalMs": 1000,
       "name": "panasonic_top",
       "function": "lnb_type1_logs",
+      "retry": 3,
+      "accepted": [],
+      "ignoreFailedConnections": true,
       "input": {
         "samba": true,
-        "path": "\\\\10.13.104.240\\lws",
+        "path": "\\\\192.168.0.85\\sky_pc",
         "credentials": false,
         "user": "",
         "pass": ""
       },
       "output": {
-        "samba": false,
-        "path": "C:\\data\\logs\\panasonic\\J01",
-        "credentials": false,
-        "user": "",
-        "pass": ""
+        "path": "C:\\data\\logs\\panasonic\\J01"
       },
       "recursive": true,
       "ignore": [
@@ -44,11 +43,7 @@
         "pass": ""
       },
       "output": {
-        "samba": false,
-        "path": "",
-        "credentials": false,
-        "user": "",
-        "pass": ""
+        "path": ""
       },
       "recursive": true,
       "ignore": [

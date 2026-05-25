@@ -198,3 +198,110 @@ func TestValidateRequiresInputCredentialsFields(t *testing.T) {
 		t.Fatal("expected validation error when input.credentials is true and input.user/input.pass are empty")
 	}
 }
+
+func TestOutputConfigOnlyRequiresLocalPathFields(t *testing.T) {
+	cfg := Config{
+		WatcherOnFileCreation: []WatcherOnFileCreationConfig{
+			{
+				WatchTarget: WatchTarget{
+					PollIntervalMs: 1000,
+					Name:           "input",
+					Path:           "watched/input",
+					Function:       "log_to_console",
+					Output: OutputConfig{
+						Path: "watched/output",
+					},
+				},
+			},
+		},
+	}
+
+	cfg.ApplyDefaults()
+	if err := cfg.Validate(); err != nil {
+		t.Fatalf("expected local-only output config to be valid, got error: %v", err)
+	}
+}
+
+func TestApplyDefaultsSetsRetry(t *testing.T) {
+	cfg := Config{
+		WatcherOnFileCreation: []WatcherOnFileCreationConfig{
+			{
+				WatchTarget: WatchTarget{
+					PollIntervalMs: 1000,
+					Name:           "input",
+					Path:           "watched/input",
+					Function:       "log_to_console",
+				},
+			},
+		},
+	}
+
+	cfg.ApplyDefaults()
+	if cfg.WatcherOnFileCreation[0].Retry != 3 {
+		t.Fatalf("expected default retry to be 3, got %d", cfg.WatcherOnFileCreation[0].Retry)
+	}
+}
+
+func TestApplyDefaultsNormalizesAcceptedExtensions(t *testing.T) {
+	cfg := Config{
+		WatcherOnFileCreation: []WatcherOnFileCreationConfig{
+			{
+				WatchTarget: WatchTarget{
+					PollIntervalMs: 1000,
+					Name:           "input",
+					Path:           "watched/input",
+					Function:       "log_to_console",
+					Accepted:       []string{"xml", ".TXT", "xml", ""},
+				},
+			},
+		},
+	}
+
+	cfg.ApplyDefaults()
+	accepted := cfg.WatcherOnFileCreation[0].Accepted
+	if len(accepted) != 2 || accepted[0] != ".xml" || accepted[1] != ".txt" {
+		t.Fatalf("expected normalized accepted extensions, got %#v", accepted)
+	}
+}
+
+func TestValidateRejectsNegativeRetry(t *testing.T) {
+	cfg := Config{
+		WatcherOnFileCreation: []WatcherOnFileCreationConfig{
+			{
+				WatchTarget: WatchTarget{
+					PollIntervalMs: 1000,
+					Name:           "input",
+					Path:           "watched/input",
+					Function:       "log_to_console",
+					Retry:          -1,
+				},
+			},
+		},
+	}
+
+	cfg.ApplyDefaults()
+	if err := cfg.Validate(); err == nil {
+		t.Fatal("expected validation error when retry is negative")
+	}
+}
+
+func TestValidateAllowsIgnoredFailedConnections(t *testing.T) {
+	cfg := Config{
+		WatcherOnFileCreation: []WatcherOnFileCreationConfig{
+			{
+				WatchTarget: WatchTarget{
+					PollIntervalMs:          1000,
+					Name:                    "input",
+					Path:                    "watched/input",
+					Function:                "log_to_console",
+					IgnoreFailedConnections: true,
+				},
+			},
+		},
+	}
+
+	cfg.ApplyDefaults()
+	if err := cfg.Validate(); err != nil {
+		t.Fatalf("expected ignoreFailedConnections config to be valid, got error: %v", err)
+	}
+}

@@ -75,17 +75,26 @@ func (s Scanner) Scan() (map[string]FileState, error) {
 }
 
 func buildFileState(path string) (FileState, error) {
+	state, _, err := SnapshotFile(path, nil)
+	return state, err
+}
+
+func SnapshotFile(path string, previous *FileState) (FileState, bool, error) {
 	info, err := os.Stat(path)
 	if err != nil {
-		return FileState{}, err
+		return FileState{}, false, err
 	}
 	if info.IsDir() {
-		return FileState{}, errors.New("expected a file, got a directory")
+		return FileState{}, false, errors.New("expected a file, got a directory")
+	}
+
+	if previous != nil && previous.Size == info.Size() && previous.ModTime.Equal(info.ModTime()) {
+		return *previous, false, nil
 	}
 
 	hash, err := hashFile(path)
 	if err != nil {
-		return FileState{}, err
+		return FileState{}, false, err
 	}
 
 	return FileState{
@@ -93,7 +102,7 @@ func buildFileState(path string) (FileState, error) {
 		Size:    info.Size(),
 		ModTime: info.ModTime(),
 		Hash:    hash,
-	}, nil
+	}, true, nil
 }
 
 func shouldIgnore(path string, patterns []string) bool {
